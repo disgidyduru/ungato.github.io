@@ -1,6 +1,6 @@
 // Importar funciones de Firebase desde CDN
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
-import { getDatabase, ref, set, onValue, push, child, get } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-database.js";
+import { getDatabase, ref, set, onValue, push, get } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-database.js";
 
 // Configuración de Firebase
 const firebaseConfig = {
@@ -40,7 +40,7 @@ onValue(topicRef, (snapshot) => {
 
 // Cambiar entre modo de vista y edición del tema
 editButton.addEventListener("click", () => {
-  if (editInput.style.display === "none") {
+  if (editInput.style.display === "none" || editInput.style.display === "") {
     // Mostrar el campo de texto para editar
     editInput.style.display = "block";
     editButton.textContent = "Guardar Cambios";

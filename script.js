@@ -1,6 +1,6 @@
 // Importar funciones de Firebase desde CDN
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
-import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-database.js";
+import { getDatabase, ref, set, onValue, push, child, get } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-database.js";
 
 // Configuración de Firebase
 const firebaseConfig = {
@@ -18,44 +18,91 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
-// Referencia a la base de datos en tiempo real
+// Referencias de la base de datos
+const topicRef = ref(database, "topic");
 const commentsRef = ref(database, "comments");
 
 // Elementos del DOM
+const topicContent = document.getElementById("topic-content");
+const editButton = document.getElementById("edit-button");
+const editInput = document.getElementById("edit-input");
 const commentInput = document.getElementById("comment-input");
-const addCommentButton = document.getElementById("add-comment-button");
+const commentButton = document.getElementById("comment-button");
 const commentsList = document.getElementById("comments-list");
 
-// Escuchar comentarios en tiempo real
-onValue(commentsRef, (snapshot) => {
-  commentsList.innerHTML = ""; // Limpiar la lista antes de actualizar
+// Escuchar cambios en el tema (base de datos)
+onValue(topicRef, (snapshot) => {
   const data = snapshot.val();
   if (data) {
-    Object.values(data).forEach((comment) => {
-      addCommentToDOM(comment);
+    topicContent.textContent = data.content || "No se ha definido el contenido.";
+  }
+});
+
+// Cambiar entre modo de vista y edición del tema
+editButton.addEventListener("click", () => {
+  if (editInput.style.display === "none") {
+    // Mostrar el campo de texto para editar
+    editInput.style.display = "block";
+    editButton.textContent = "Guardar Cambios";
+    editInput.value = topicContent.textContent;
+  } else {
+    // Guardar los cambios en Firebase
+    const newContent = editInput.value.trim();
+    if (newContent) {
+      set(topicRef, {
+        content: newContent
+      }).then(() => {
+        alert("Contenido actualizado exitosamente.");
+        topicContent.textContent = newContent;
+        editButton.textContent = "Editar Información";
+        editInput.style.display = "none";
+      }).catch((error) => {
+        console.error("Error al guardar los cambios:", error);
+        alert("Ocurrió un error al guardar los cambios.");
+      });
+    }
+  }
+});
+
+// Agregar un comentario
+commentButton.addEventListener("click", () => {
+  const commentText = commentInput.value.trim();
+  if (commentText) {
+    const newCommentRef = push(commentsRef);
+    set(newCommentRef, {
+      comment: commentText
+    }).then(() => {
+      commentInput.value = ""; // Limpiar el campo de comentario
+      alert("Comentario agregado.");
+      loadComments(); // Recargar los comentarios
+    }).catch((error) => {
+      console.error("Error al agregar comentario:", error);
+      alert("Ocurrió un error al agregar el comentario.");
     });
   }
 });
 
-// Función para agregar un comentario al DOM
-function addCommentToDOM(commentText) {
-  const listItem = document.createElement("li");
-  listItem.textContent = commentText;
-  commentsList.appendChild(listItem);
+// Cargar comentarios desde Firebase
+function loadComments() {
+  get(commentsRef).then((snapshot) => {
+    if (snapshot.exists()) {
+      const comments = snapshot.val();
+      commentsList.innerHTML = ""; // Limpiar la lista actual
+      for (const key in comments) {
+        if (comments.hasOwnProperty(key)) {
+          const li = document.createElement("li");
+          li.classList.add("comment");
+          li.textContent = comments[key].comment;
+          commentsList.appendChild(li);
+        }
+      }
+    } else {
+      commentsList.innerHTML = "<li>No hay comentarios aún.</li>";
+    }
+  }).catch((error) => {
+    console.error("Error al cargar comentarios:", error);
+  });
 }
 
-// Agregar un nuevo comentario a Firebase
-addCommentButton.addEventListener("click", () => {
-  const commentText = commentInput.value.trim();
-
-  if (commentText === "") {
-    alert("El comentario no puede estar vacío.");
-    return;
-  }
-
-  // Enviar comentario a Firebase
-  push(commentsRef, commentText);
-
-  // Limpiar el campo de entrada
-  commentInput.value = "";
-});
+// Cargar comentarios al iniciar la página
+loadComments();

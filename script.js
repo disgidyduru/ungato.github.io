@@ -33,14 +33,7 @@ const commentInput = document.getElementById("comment-input");
 const addCommentButton = document.getElementById("add-comment-button");
 const commentsList = document.getElementById("comments-list");
 
-// Cargar comentarios en tiempo real
-commentsRef.on("value", (snapshot) => {
-  commentsList.innerHTML = ""; // Limpiar lista antes de actualizar
-  const comments = snapshot.val();
-  for (let key in comments) {
-    addCommentToDOM(comments[key]);
-  }
-});
+
 
 // Función para agregar un comentario
 addCommentButton.addEventListener("click", () => {
@@ -57,6 +50,17 @@ addCommentButton.addEventListener("click", () => {
   // Limpiar el área de texto
   commentInput.value = "";
 });
+
+
+// Cargar comentarios en tiempo real
+commentsRef.on("value", (snapshot) => {
+  commentsList.innerHTML = ""; // Limpiar lista antes de actualizar
+  const comments = snapshot.val();
+  for (let key in comments) {
+    addCommentToDOM(comments[key]);
+  }
+});
+
 
 // Función para agregar un comentario al DOM
 function addCommentToDOM(commentText) {

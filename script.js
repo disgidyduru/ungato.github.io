@@ -64,21 +64,26 @@ editButton.addEventListener("click", () => {
   }
 });
 
-// Agregar un comentario
+// Mostrar la caja de comentario cuando se hace clic en "Agregar Comentario"
 commentButton.addEventListener("click", () => {
-  const commentText = commentInput.value.trim();
-  if (commentText) {
-    const newCommentRef = push(commentsRef);
-    set(newCommentRef, {
-      comment: commentText
-    }).then(() => {
-      commentInput.value = ""; // Limpiar el campo de comentario
-      alert("Comentario agregado.");
-      loadComments(); // Recargar los comentarios
-    }).catch((error) => {
-      console.error("Error al agregar comentario:", error);
-      alert("Ocurrió un error al agregar el comentario.");
-    });
+  if (commentInput.style.display === "none" || commentInput.style.display === "") {
+    commentInput.style.display = "block"; // Mostrar la caja de comentario
+  } else {
+    const commentText = commentInput.value.trim();
+    if (commentText) {
+      const newCommentRef = push(commentsRef);
+      set(newCommentRef, {
+        comment: commentText
+      }).then(() => {
+        commentInput.value = ""; // Limpiar el campo de comentario
+        commentInput.style.display = "none"; // Ocultar la caja de comentario
+        alert("Comentario agregado.");
+        loadComments(); // Recargar los comentarios
+      }).catch((error) => {
+        console.error("Error al agregar comentario:", error);
+        alert("Ocurrió un error al agregar el comentario.");
+      });
+    }
   }
 });
 

@@ -1,48 +1,34 @@
 
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página Editable</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Evolución de la Inteligencia Artificial</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Información sobre la Evolución de la INTELIGENCIA PERROS Artificial</h1>
+  <header>
+    <h1>Evolución de la Inteligencia Artificial</h1>
+  </header>
+  
+  <main>
+    <section id="content-section">
+      <h2 id="content-title">Historia de la Inteligencia Artificial</h2>
+      <p id="content-paragraph">
+        La inteligencia artificial (IA) ha evolucionado desde la conceptualización en la década de 1950 hasta convertirse en una tecnología revolucionaria que impacta en muchos aspectos de la sociedad.
+      </p>
+      <button id="edit-button">Editar contenido</button>
+    </section>
+    
+    <section id="comments-section">
+      <h2>Comentarios</h2>
+      <ul id="comments-list"></ul>
+      <textarea id="comment-input" placeholder="Escribe tu comentario aquí..."></textarea>
+      <button id="add-comment-button">Agregar comentario</button>
+    </section>
+  </main>
 
-    <!-- Mostrar el contenido actual del tema -->
-    <div id="tema">
-        <p><?php echo nl2br(htmlspecialchars($contenidoTema)); ?></p>
-    </div>
-
-    <!-- Botón para mostrar el formulario de edición -->
-    <button onclick="document.getElementById('form-editar').style.display='block';">Modificar Información</button>
-
-    <!-- Formulario para editar el contenido del tema -->
-    <form id="form-editar" action="guardar_tema.php" method="post" style="display:none;">
-        <textarea name="nuevo_tema" rows="10" cols="50" required><?php echo htmlspecialchars($contenidoTema); ?></textarea><br>
-        <button type="submit">Guardar</button>
-    </form>
-
-    <hr>
-
-    <h2>Agrega un Comentario</h2>
-    <form action="guardar.php" method="post">
-        <label for="comentario">Escribe tu comentario:</label><br>
-        <textarea name="comentario" id="comentario" rows="5" cols="40" required></textarea><br><br>
-        <button type="submit">Enviar</button>
-    </form>
-
-    <hr>
-
-    <h2>Comentarios Anteriores</h2>
-    <?php
-    if (file_exists("comentarios.txt")) {
-        $comentarios = file_get_contents("comentarios.txt");
-        echo nl2br($comentarios);
-    } else {
-        echo "Aún no hay comentarios.";
-    }
-    ?>
+  <script src="script.js"></script>
 </body>
 </html>

@@ -93,3 +93,12 @@ function addCommentToDOM(commentText) {
   commentItem.textContent = commentText;
   commentsList.appendChild(commentItem);
 }
+
+// Cargar comentarios en tiempo real
+commentsRef.on("value", (snapshot) => {
+  commentsList.innerHTML = ""; // Limpiar lista antes de actualizar
+  const comments = snapshot.val();
+  for (let key in comments) {
+    addCommentToDOM(comments[key]);
+  }
+});

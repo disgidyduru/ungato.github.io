@@ -16,17 +16,17 @@ const firebaseConfig = {
   measurementId: "G-C2BZ9EPY5N"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-
-
 // Inicializar Firebase
 firebase.initializeApp(firebaseConfig);
 
 // Referencia a la base de datos
 const database = firebase.database();
 const commentsRef = database.ref("comments");
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
 
 // Elementos del DOM
 const commentInput = document.getElementById("comment-input");

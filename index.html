@@ -3,72 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Editar Información del Tema y Agregar Comentarios</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-      padding: 20px;
-      background-color: #f4f4f9;
-    }
-    h1 {
-      color: #333;
-    }
-    #edit-button, #comment-button {
-      padding: 10px 20px;
-      font-size: 16px;
-      background-color: #007BFF;
-      color: white;
-      border: none;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-    #edit-button:hover, #comment-button:hover {
-      background-color: #0056b3;
-    }
-    #topic-text, #comments-section {
-      margin-bottom: 20px;
-    }
-    #edit-input, #comment-input {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 10px;
-      font-size: 16px;
-      display: none;
-    }
-    #comments-list {
-      list-style-type: none;
-      padding: 0;
-    }
-    .comment {
-      padding: 10px;
-      margin-bottom: 10px;
-      background-color: #e9ecef;
-      border-radius: 5px;
-    }
-  </style>
+  <title>Comentarios y Edición</title>
 </head>
 <body>
-  <h1>Editar Información del Tema y Agregar Comentarios</h1>
+  <h1>Información de la Página</h1>
+  <div id="topic-content"></div>
 
-  <!-- Sección de Tema -->
-  <div id="topic-text">
-    <p id="topic-content">Este es el contenido original del tema sobre Inteligencia Artificial...</p>
-  </div>
-  <textarea id="edit-input" placeholder="Edita el contenido aquí..."></textarea>
   <button id="edit-button">Editar Información</button>
+  <textarea id="edit-input" style="display:none;"></textarea>
 
-  <!-- Sección de Comentarios -->
-  <div id="comments-section">
-    <h2>Comentarios</h2>
-    <button id="comment-button">Agregar Comentario</button>
-    <textarea id="comment-input" placeholder="Escribe tu comentario..."></textarea>
-    <ul id="comments-list">
-      <!-- Comentarios aparecerán aquí -->
-    </ul>
-  </div>
+  <h2>Comentarios</h2>
+  <button id="comment-button">Agregar comentario</button>
+  <textarea id="comment-input" style="display:none;"></textarea>
+  
+  <ul id="comments-list"></ul>
 
-  <!-- Script -->
-  <script type="module" src="script.js"></script>
+  <!-- Referencia al archivo script.js -->
+  <script src="script.js" type="module"></script>
 </body>
 </html>

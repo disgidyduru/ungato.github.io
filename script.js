@@ -30,7 +30,7 @@ const commentInput = document.getElementById("comment-input");
 const commentButton = document.getElementById("comment-button");
 const commentsList = document.getElementById("comments-list");
 
-// Cargar comentarios desde Firebase
+// Cargar los comentarios desde Firebase
 function loadComments() {
   get(commentsRef).then((snapshot) => {
     if (snapshot.exists()) {
@@ -41,8 +41,8 @@ function loadComments() {
           const li = document.createElement("li");
           li.classList.add("comment");
 
-          // Usar innerHTML para interpretar el HTML de saltos de línea
-          li.innerHTML = comments[key].comment;
+          // Usar innerHTML para que los saltos de línea <br> sean interpretados correctamente
+          li.innerHTML = comments[key].comment.replace(/\n/g, "<br>");
 
           commentsList.appendChild(li);
         }
@@ -55,13 +55,13 @@ function loadComments() {
   });
 }
 
-// Cambiar entre modo de vista y edición del tema
+// Cambiar entre el modo de vista y edición del tema
 editButton.addEventListener("click", () => {
   if (editInput.style.display === "none" || editInput.style.display === "") {
     // Mostrar el campo de texto para editar
     editInput.style.display = "block";
     editButton.textContent = "Guardar Cambios";
-    editInput.value = topicContent.textContent;
+    editInput.value = topicContent.textContent.replace(/<br>/g, "\n"); // Convertir <br> a saltos de línea
   } else {
     // Guardar los cambios en Firebase
     const newContent = editInput.value.trim();
@@ -131,5 +131,16 @@ commentInput.addEventListener("keypress", (e) => {
   }
 });
 
-// Cargar comentarios al iniciar la página
+// Cargar el contenido del tema al inicio de la página
+get(topicRef).then((snapshot) => {
+  if (snapshot.exists()) {
+    topicContent.innerHTML = snapshot.val().content; // Cargar el contenido con HTML para que se interpreten los <br>
+  } else {
+    topicContent.innerHTML = "<p>No se ha definido el contenido del tema.</p>";
+  }
+}).catch((error) => {
+  console.error("Error al cargar el contenido del tema:", error);
+});
+
+// Cargar los comentarios al iniciar la página
 loadComments();

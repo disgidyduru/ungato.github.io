@@ -8,7 +8,7 @@
 </head>
 <body>
 
-    <h2 style="text-align:center;">Información de la Página</h2>
+    <h2 id="mainContent" style="text-align:center;">Información de la Página</h2>
 
     <!-- Sección para Editar la Información -->
     <div>
@@ -35,13 +35,13 @@
                 <td><input type="text" value="Juan" class="edit-field"></td>
                 <td><input type="number" value="25" class="edit-field"></td>
                 <td><input type="text" value="Madrid" class="edit-field"></td>
-                <td><button onclick="saveRow(this)">Guardar</button></td>
+                <td><button onclick="editRow(this)">Editar</button></td>
             </tr>
             <tr>
                 <td><input type="text" value="Ana" class="edit-field"></td>
                 <td><input type="number" value="30" class="edit-field"></td>
                 <td><input type="text" value="Barcelona" class="edit-field"></td>
-                <td><button onclick="saveRow(this)">Guardar</button></td>
+                <td><button onclick="editRow(this)">Editar</button></td>
             </tr>
         </tbody>
     </table>

@@ -15,35 +15,33 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
-// Función para actualizar la información de la página
+// ** Editar Información de la Página **
 function updateContent() {
     const content = document.getElementById('editContent').value;
-    set(ref(database, 'pagina/tema'), {
-        content: content
-    });
+    set(ref(database, 'pagina/tema'), { content: content });
+    alert("Información guardada correctamente.");
 }
 
 // Cargar la información desde Firebase
 onValue(ref(database, 'pagina/tema'), (snapshot) => {
     const data = snapshot.val();
     if (data && data.content) {
-        const editContent = document.getElementById('editContent');
-        editContent.value = data.content;
-        document.querySelector("h2").innerText = data.content.replace(/\n/g, "\n");
+        const mainContent = document.getElementById('mainContent');
+        mainContent.innerText = data.content;
+        document.getElementById('editContent').value = data.content;
     }
 });
 
-// Función para agregar comentarios
+// ** Agregar Comentarios **
 function addComment() {
     const commentText = document.getElementById('commentText').value;
     if (commentText) {
         const commentsRef = ref(database, 'pagina/comentarios/');
         const newCommentRef = push(commentsRef);
-        set(newCommentRef, {
-            text: commentText
-        });
+        set(newCommentRef, { text: commentText });
 
         document.getElementById('commentText').value = '';
+        alert("Comentario agregado correctamente.");
     }
 }
 
@@ -53,38 +51,33 @@ onValue(ref(database, 'pagina/comentarios'), (snapshot) => {
     const commentsList = document.getElementById('comments-list');
     commentsList.innerHTML = '';
 
-    for (let id in comments) {
-        const comment = comments[id];
-        const commentDiv = document.createElement('div');
-        commentDiv.textContent = comment.text;
-        commentsList.appendChild(commentDiv);
+    if (comments) {
+        for (let id in comments) {
+            const comment = comments[id];
+            const commentDiv = document.createElement('div');
+            commentDiv.textContent = comment.text;
+            commentsList.appendChild(commentDiv);
+        }
     }
 });
 
-// Función para guardar la fila de la tabla editable
-function saveRow(button) {
-    const row = button.closest('tr');
-    const inputs = row.querySelectorAll('input');
-
-    inputs.forEach(input => {
-        input.disabled = true;
-    });
-
-    button.textContent = "Editar";
-    button.setAttribute("onclick", "editRow(this)");
-}
-
-// Función para habilitar los campos de la fila para edición
+// ** Funcionalidades para la Tabla Editable **
 function editRow(button) {
     const row = button.closest('tr');
     const inputs = row.querySelectorAll('input');
+    const isEditing = button.textContent === "Editar";
 
-    inputs.forEach(input => {
-        input.disabled = false;
-    });
+    inputs.forEach(input => input.disabled = !isEditing);
+    button.textContent = isEditing ? "Guardar" : "Editar";
 
-    button.textContent = "Guardar";
-    button.setAttribute("onclick", "saveRow(this)");
+    if (!isEditing) {
+        saveRow(inputs);
+    }
 }
 
-export { updateContent, addComment, saveRow, editRow };
+function saveRow(inputs) {
+    const rowData = Array.from(inputs).map(input => input.value);
+    console.log("Datos guardados:", rowData); // Aquí puedes guardar en Firebase si es necesario
+}
+
+export { updateContent, addComment, editRow };

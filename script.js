@@ -32,16 +32,17 @@ const commentsList = document.getElementById("comments-list");
 
 // Cargar los comentarios desde Firebase
 function loadComments() {
-  get(commentsRef).then((snapshot) => {
+  onValue(commentsRef, (snapshot) => {
+    commentsList.innerHTML = ""; // Limpiar la lista actual de comentarios
     if (snapshot.exists()) {
       const comments = snapshot.val();
-      commentsList.innerHTML = ""; // Limpiar la lista actual
+      // Recorrer todos los comentarios
       for (const key in comments) {
         if (comments.hasOwnProperty(key)) {
           const li = document.createElement("li");
           li.classList.add("comment");
 
-          // Usar innerHTML para que los saltos de línea <br> sean interpretados correctamente
+          // Reemplazar los saltos de línea por <br> para mostrar correctamente
           li.innerHTML = comments[key].comment.replace(/\n/g, "<br>");
 
           commentsList.appendChild(li);
@@ -50,8 +51,6 @@ function loadComments() {
     } else {
       commentsList.innerHTML = "<li>No hay comentarios aún.</li>";
     }
-  }).catch((error) => {
-    console.error("Error al cargar comentarios:", error);
   });
 }
 

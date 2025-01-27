@@ -1,3 +1,4 @@
+
 // Importar funciones de Firebase desde CDN
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
 import { getDatabase, ref, set, onValue, push, get } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-database.js";
@@ -84,26 +85,22 @@ editButton.addEventListener("click", () => {
 
 // Permitir agregar comentario al presionar "Enter"
 commentButton.addEventListener("click", () => {
-  if (commentInput.style.display === "none" || commentInput.style.display === "") {
-    commentInput.style.display = "block"; // Mostrar la caja de comentario
-  } else {
-    const commentText = commentInput.value.trim();
-    if (commentText) {
-      const formattedComment = commentText.replace(/\n/g, "<br>"); // Reemplazar saltos de línea por <br>
+  const commentText = commentInput.value.trim();
+  if (commentText) {
+    const formattedComment = commentText.replace(/\n/g, "<br>"); // Reemplazar saltos de línea por <br>
 
-      const newCommentRef = push(commentsRef);
-      set(newCommentRef, {
-        comment: formattedComment
-      }).then(() => {
-        commentInput.value = ""; // Limpiar el campo de comentario
-        commentInput.style.display = "none"; // Ocultar la caja de comentario
-        alert("Comentario agregado.");
-        loadComments(); // Recargar los comentarios
-      }).catch((error) => {
-        console.error("Error al agregar comentario:", error);
-        alert("Ocurrió un error al agregar el comentario.");
-      });
-    }
+    const newCommentRef = push(commentsRef);
+    set(newCommentRef, {
+      comment: formattedComment
+    }).then(() => {
+      commentInput.value = ""; // Limpiar el campo de comentario
+      commentInput.style.display = "none"; // Ocultar la caja de comentario
+      alert("Comentario agregado.");
+      loadComments(); // Recargar los comentarios
+    }).catch((error) => {
+      console.error("Error al agregar comentario:", error);
+      alert("Ocurrió un error al agregar el comentario.");
+    });
   }
 });
 

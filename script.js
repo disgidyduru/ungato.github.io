@@ -1,18 +1,17 @@
-
-// Importar funciones de Firebase desde CDN
+// Importar las funciones necesarias de Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
-import { getDatabase, ref, set, onValue, push, get } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-database.js";
+import { getDatabase, ref, set, get, child, push } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-database.js";
 
-// Configuración de Firebase
+// Configuración de Firebase (como la proporcionaste)
 const firebaseConfig = {
-  apiKey: "AIzaSyCOlxixdTjAmu-i6orZvPlwFozLgz9b7Ao",
-  authDomain: "basededatosfinal-cc8a6.firebaseapp.com",
-  databaseURL: "https://basededatosfinal-cc8a6-default-rtdb.firebaseio.com",
-  projectId: "basededatosfinal-cc8a6",
-  storageBucket: "basededatosfinal-cc8a6.firebasestorage.app",
-  messagingSenderId: "880268232566",
-  appId: "1:880268232566:web:2abe4f3d3f7b3dddb1dc57",
-  measurementId: "G-TBKZQ59Z4D"
+  apiKey: "AIzaSyDYrYWOwQx6476c_35NJmZnikJYOoZgrh0",
+  authDomain: "mibasedefatod.firebaseapp.com",
+  databaseURL: "https://mibasedefatod-default-rtdb.firebaseio.com",
+  projectId: "mibasedefatod",
+  storageBucket: "mibasedefatod.firebasestorage.app",
+  messagingSenderId: "1024936669774",
+  appId: "1:1024936669774:web:43051c93ab940bdc5c491f",
+  measurementId: "G-XMXGGBK1H3"
 };
 
 // Inicializar Firebase
@@ -23,7 +22,7 @@ const database = getDatabase(app);
 const topicRef = ref(database, "topic");
 const commentsRef = ref(database, "comments");
 
-// Elementos del DOM
+// Elementos DOM
 const topicContent = document.getElementById("topic-content");
 const editButton = document.getElementById("edit-button");
 const editInput = document.getElementById("edit-input");
@@ -31,112 +30,83 @@ const commentInput = document.getElementById("comment-input");
 const commentButton = document.getElementById("comment-button");
 const commentsList = document.getElementById("comments-list");
 
-// Cargar los comentarios desde Firebase
-function loadComments() {
-  onValue(commentsRef, (snapshot) => {
-    commentsList.innerHTML = ""; // Limpiar la lista actual de comentarios
-    if (snapshot.exists()) {
-      const comments = snapshot.val();
-      // Recorrer todos los comentarios
-      for (const key in comments) {
-        if (comments.hasOwnProperty(key)) {
-          const li = document.createElement("li");
-          li.classList.add("comment");
-
-          // Reemplazar los saltos de línea por <br> para mostrar correctamente
-          li.innerHTML = comments[key].comment.replace(/\n/g, "<br>");
-
-          commentsList.appendChild(li);
-        }
-      }
+// Cargar el contenido de la página
+function loadTopicContent() {
+  get(topicRef).then((snapshot) => {
+    const topic = snapshot.val();
+    if (topic && topic.content) {
+      topicContent.innerHTML = topic.content.replace(/\n/g, "<br>"); // Convertir saltos de línea en <br>
     } else {
-      commentsList.innerHTML = "<li>No hay comentarios aún.</li>";
+      topicContent.innerHTML = "<p>No hay contenido disponible.</p>";
     }
   });
 }
 
-// Cambiar entre el modo de vista y edición del tema
-editButton.addEventListener("click", () => {
-  if (editInput.style.display === "none" || editInput.style.display === "") {
-    // Mostrar el campo de texto para editar
-    editInput.style.display = "block";
-    editButton.textContent = "Guardar Cambios";
-    editInput.value = topicContent.textContent.replace(/<br>/g, "\n"); // Convertir <br> a saltos de línea
+// Cargar los comentarios
+function loadComments() {
+  get(commentsRef).then((snapshot) => {
+    commentsList.innerHTML = "";
+    const comments = snapshot.val();
+    if (comments) {
+      Object.values(comments).forEach(comment => {
+        const li = document.createElement("li");
+        li.innerHTML = comment.comment.replace(/\n/g, "<br>"); // Convertir saltos de línea en <br>
+        commentsList.appendChild(li);
+      });
+    }
+  });
+}
+
+// Guardar el contenido del tema
+editButton.addEventListener('click', () => {
+  if (editInput.style.display === 'none') {
+    // Modo de edición
+    editInput.style.display = 'block';
+    editButton.textContent = 'Guardar cambios';
+    editInput.value = topicContent.innerHTML.replace(/<br>/g, "\n"); // Mostrar el contenido en formato de texto
   } else {
-    // Guardar los cambios en Firebase
+    // Guardar cambios
     const newContent = editInput.value.trim();
     if (newContent) {
-      const formattedContent = newContent.replace(/\n/g, "<br>"); // Reemplazar saltos de línea por <br>
-
-      set(topicRef, {
-        content: formattedContent
-      }).then(() => {
-        alert("Contenido actualizado exitosamente.");
-        topicContent.innerHTML = formattedContent; // Usamos innerHTML para que se interpreten los saltos de línea
-        editButton.textContent = "Editar Información";
-        editInput.style.display = "none";
-      }).catch((error) => {
-        console.error("Error al guardar los cambios:", error);
-        alert("Ocurrió un error al guardar los cambios.");
-      });
+      const formattedContent = newContent.replace(/\n/g, "<br>");
+      set(topicRef, { content: formattedContent })
+        .then(() => {
+          topicContent.innerHTML = formattedContent; // Actualizar el contenido
+          editInput.style.display = 'none';
+          editButton.textContent = 'Editar Información';
+        })
+        .catch((error) => {
+          alert("Error al guardar los cambios: " + error);
+        });
     }
   }
 });
 
-// Permitir agregar comentario al presionar "Enter"
-commentButton.addEventListener("click", () => {
+// Agregar un comentario
+commentButton.addEventListener('click', () => {
   const commentText = commentInput.value.trim();
   if (commentText) {
-    const formattedComment = commentText.replace(/\n/g, "<br>"); // Reemplazar saltos de línea por <br>
-
+    const formattedComment = commentText.replace(/\n/g, "<br>");
     const newCommentRef = push(commentsRef);
-    set(newCommentRef, {
-      comment: formattedComment
-    }).then(() => {
-      commentInput.value = ""; // Limpiar el campo de comentario
-      commentInput.style.display = "none"; // Ocultar la caja de comentario
-      alert("Comentario agregado.");
-      loadComments(); // Recargar los comentarios
-    }).catch((error) => {
-      console.error("Error al agregar comentario:", error);
-      alert("Ocurrió un error al agregar el comentario.");
-    });
-  }
-});
-
-// Detectar cuando el usuario presiona "Enter" en el campo de comentario para agregarlo automáticamente
-commentInput.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
-    const commentText = commentInput.value.trim();
-    if (commentText) {
-      const formattedComment = commentText.replace(/\n/g, "<br>"); // Reemplazar saltos de línea por <br>
-
-      const newCommentRef = push(commentsRef);
-      set(newCommentRef, {
-        comment: formattedComment
-      }).then(() => {
-        commentInput.value = ""; // Limpiar el campo de comentario
-        commentInput.style.display = "none"; // Ocultar la caja de comentario
-        alert("Comentario agregado.");
+    set(newCommentRef, { comment: formattedComment })
+      .then(() => {
+        commentInput.value = "";
+        commentInput.style.display = 'none'; // Ocultar el campo de comentario
         loadComments(); // Recargar los comentarios
-      }).catch((error) => {
-        console.error("Error al agregar comentario:", error);
-        alert("Ocurrió un error al agregar el comentario.");
+      })
+      .catch((error) => {
+        alert("Error al agregar comentario: " + error);
       });
-    }
   }
 });
 
-// Cargar el contenido del tema al inicio de la página
-get(topicRef).then((snapshot) => {
-  if (snapshot.exists()) {
-    topicContent.innerHTML = snapshot.val().content; // Cargar el contenido con HTML para que se interpreten los <br>
-  } else {
-    topicContent.innerHTML = "<p>No se ha definido el contenido del tema.</p>";
-  }
-}).catch((error) => {
-  console.error("Error al cargar el contenido del tema:", error);
+// Mostrar el campo de comentario
+commentButton.addEventListener('click', () => {
+  commentInput.style.display = 'block';
 });
 
-// Cargar los comentarios al iniciar la página
-loadComments();
+// Inicializar la página
+window.onload = function() {
+  loadTopicContent(); // Cargar el contenido del tema
+  loadComments(); // Cargar los comentarios
+};

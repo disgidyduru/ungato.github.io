@@ -7,14 +7,13 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
     <h2 id="mainContent" style="text-align:center;">Información de la Página</h2>
 
-    <!-- Sección para Editar la Información -->
+    <!-- Editar Información -->
     <div>
         <h3>Editar Información del Tema</h3>
         <textarea id="editContent" rows="10" cols="50"></textarea><br>
-        <button onclick="updateContent()">Guardar Información</button>
+        <button id="saveContentBtn">Guardar Información</button>
     </div>
 
     <hr>
@@ -30,32 +29,22 @@
                 <th>Acciones</th>
             </tr>
         </thead>
-        <tbody>
-            <tr>
-                <td><input type="text" value="Juan" class="edit-field"></td>
-                <td><input type="number" value="25" class="edit-field"></td>
-                <td><input type="text" value="Madrid" class="edit-field"></td>
-                <td><button onclick="editRow(this)">Editar</button></td>
-            </tr>
-            <tr>
-                <td><input type="text" value="Ana" class="edit-field"></td>
-                <td><input type="number" value="30" class="edit-field"></td>
-                <td><input type="text" value="Barcelona" class="edit-field"></td>
-                <td><button onclick="editRow(this)">Editar</button></td>
-            </tr>
+        <tbody id="tableBody">
+            <!-- Las filas se cargarán dinámicamente -->
         </tbody>
     </table>
+    <button id="addRowBtn">Agregar Fila</button>
 
     <hr>
 
-    <!-- Sección para Agregar Comentarios -->
+    <!-- Agregar Comentarios -->
     <div id="comments-section">
         <h3>Comentarios</h3>
         <textarea id="commentText" placeholder="Escribe tu comentario aquí..." rows="4" cols="50"></textarea><br>
-        <button onclick="addComment()">Agregar Comentario</button>
+        <button id="addCommentBtn">Agregar Comentario</button>
         
         <div id="comments-list">
-            <!-- Aquí se cargarán los comentarios -->
+            <!-- Los comentarios se cargarán dinámicamente -->
         </div>
     </div>
 

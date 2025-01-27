@@ -1,24 +1,64 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Comentarios y Edición</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Página Web</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h1>Información de la Página</h1>
-  <div id="topic-content"></div>
 
-  <button id="edit-button">Editar Información</button>
-  <textarea id="edit-input" style="display:none;"></textarea>
+    <h2 style="text-align:center;">Información de la Página</h2>
 
-  <h2>Comentarios</h2>
-  <button id="comment-button">Agregar comentario</button>
-  <textarea id="comment-input" style="display:none;"></textarea>
-  
-  <ul id="comments-list"></ul>
+    <!-- Sección para Editar la Información -->
+    <div>
+        <h3>Editar Información del Tema</h3>
+        <textarea id="editContent" rows="10" cols="50"></textarea><br>
+        <button onclick="updateContent()">Guardar Información</button>
+    </div>
 
-  <!-- Referencia al archivo script.js -->
-  <script src="script.js" type="module"></script>
+    <hr>
+
+    <!-- Tabla Editable -->
+    <h3>Tabla Editable</h3>
+    <table id="editableTable">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Edad</th>
+                <th>Ciudad</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><input type="text" value="Juan" class="edit-field"></td>
+                <td><input type="number" value="25" class="edit-field"></td>
+                <td><input type="text" value="Madrid" class="edit-field"></td>
+                <td><button onclick="saveRow(this)">Guardar</button></td>
+            </tr>
+            <tr>
+                <td><input type="text" value="Ana" class="edit-field"></td>
+                <td><input type="number" value="30" class="edit-field"></td>
+                <td><input type="text" value="Barcelona" class="edit-field"></td>
+                <td><button onclick="saveRow(this)">Guardar</button></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr>
+
+    <!-- Sección para Agregar Comentarios -->
+    <div id="comments-section">
+        <h3>Comentarios</h3>
+        <textarea id="commentText" placeholder="Escribe tu comentario aquí..." rows="4" cols="50"></textarea><br>
+        <button onclick="addComment()">Agregar Comentario</button>
+        
+        <div id="comments-list">
+            <!-- Aquí se cargarán los comentarios -->
+        </div>
+    </div>
+
+    <script type="module" src="script.js"></script>
 </body>
 </html>
